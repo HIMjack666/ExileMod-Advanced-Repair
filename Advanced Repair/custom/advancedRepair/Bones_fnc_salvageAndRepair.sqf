@@ -1,10 +1,11 @@
-private ["_partsNeeded","_itemsNeeded","_partsToActOn","_partToActOn","_brokenParts","_repairableParts","_salvageableParts","_itemAction","_equippedMagazines","_vehicle","_action","_usedArray","_missingArray","_duration","_progress","_sleepDuration","_startTime","_label"];
+private ["_partsNeeded","_itemsNeeded","_partsToActOn","_partToActOn","_brokenParts","_repairableParts","_sortedRepairableParts","_salvageableParts","_itemAction","_equippedMagazines","_vehicle","_action","_usedArray","_missingArray","_duration","_progress","_sleepDuration","_startTime","_label"];
 
 _partsNeeded = [];
 _itemsNeeded = [];
 _partsToActOn = [];
 _partToActOn = [];
 _repairableParts =[];
+_sortedRepairableParts =[];
 _salvageableParts =[];
 _equippedMagazines = magazines player;
 _vehicle = _this select 1;
@@ -322,6 +323,10 @@ if (_action == 'repairAllCar') then
 	};
 }forEach _partsToActOn;
 
+//sort _repairableParts by damage DESCEND
+
+_sortedRepairableParts = [_repairableParts,[],{_vehicle getHitPointDamage _x}, "DESCEND"] call BIS_fnc_sortBy;
+
 //Check for all required tools and parts
 
 if (_itemAction == 0) then
@@ -389,7 +394,7 @@ else
 {
 	if(_itemAction == 0) then
 	{
-	_partToActOn pushback (_repairableParts select 0);
+	_partToActOn pushback (_sortedRepairableParts select 0);
 	}
 	else
 	{
